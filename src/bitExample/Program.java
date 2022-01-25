@@ -7,43 +7,77 @@ import java.util.*;
 public class Program {
     public static void main(String[] args) {
 
+        // transposition key used to encode text
         String cryptographicKey="hfiauhfso";
+
+        //length of the transposition key
         float cryptographicKeyLength=cryptographicKey.length();
 
+        // text to encode
         String textToEncode="Buongiorno a tutti";
+
+        // concate the variable of type String to the variable of the same type that contains the 
+        // text to encode,  removing the spaces from the  phrase text to encode
         textToEncode=cryptographicKey+textToEncode.replace(" ","");
+
+        // length of the text to encode
         float textToEncodeLength=textToEncode.length();
+
+        // operation to calculate the number of rows in relation to the length of the key
         Double rowOperation=Math.ceil(textToEncodeLength/cryptographicKeyLength);
+
+        // creation of variable of type int, that stores the number of rows calculate on line 26, rounded by excess
         int rows = (int) Math.round(rowOperation)+1;
 
+        // initialization of Array collection of type char, in which it's stored the String value of the key converted to
+        // an Array of type char
         char[] keyToChar=cryptographicKey.toCharArray();
+
+        // METHOD TO PROCESS THE ARRAY KEY
+        // ----------------------------------
+
+
+
+        // initialization a temporary Array collection of type char, in which it's stored the String value of the
+        // text converted to an Array of type char
         char[] temp=textToEncode.toCharArray();
-        Character[] charArrayText= new String(temp).chars()
-                                    .mapToObj(c -> (char) c)
-                                    .toArray(Character[]::new);
 
+        // initialization of an Array of type Character, that will contain the converted array of type character
+        //the conversion happens through the methods associated with the String complex varialble
+
+        //(to be specific, the array of type char is casted to type String, so that the methods associated to the type
+        // can be used. Then the array now converted to a string is converted to an int type stream that extends the char
+        // values, after that there is a conversion to object type Stream is that can now be converted to an Array 
+        // of type Character )
+        Character[] characterTextToEncode= new String(temp).chars()
+                                             .mapToObj(c -> (char) c)
+                                            .toArray(Character[]::new);
+
+        // initializes a multidimensinal Array of type char, of number of columns equal to rows and 
+        // number of columns equal to the length of the key
         char [][] multidimensionalArray= new char[rows][(int)cryptographicKeyLength];
-        int contatore=0;
 
+        //counter to cycle for the length of the text
+        int counter=0;
+        
+        System.out.println("Rappresentation of the key concatenated to the text to encode in columns: ");
+        //for loop with nested for loop, to fill the multidimentional Array initialized on line 53
         for(int i=0; i<rows;i++){
 
-
             for(int j=0;j<(int)cryptographicKeyLength;j++){
-
-                if(contatore<(int)textToEncodeLength){
-                    multidimensionalArray[i][j]=charArrayText[contatore];
+                
+                // if the counter is smaller than the length of the text to encode
+                // (this is done because in the last column there could be additional iterations beyond the length 
+                // set for the multidimensional array)
+                if(counter<(int)textToEncodeLength){
+                    multidimensionalArray[i][j]=characterTextToEncode[counter];
                     System.out.print(multidimensionalArray[i][j]);
                 }
-                contatore++;
+                counter++;
             }
             System.out.println();
         }
 
-//        for(int i=0; i<rows;i++){
-//            for(int j=0;j<(int)cryptographicKeyLength;j++){
-//                System.out.println(multidimensionalArray[i][j]);
-//            }
-//        }
 
 
         Character[][] arrayIndex=new Character[(int)cryptographicKeyLength][1];
@@ -96,7 +130,7 @@ public class Program {
 
         Arrays.sort(pair, Comparator.comparing(o ->((Character) o[0])));
 
-//        decryption
+        //decryption
         StringBuffer decryptedWord= new StringBuffer();
         //cryptographicKeyLength
 
@@ -142,6 +176,9 @@ public class Program {
         String decryptedResult=decryptedWord.toString();
         System.out.println("decryption: "+decryptedResult);
 
+    }
+    public static void keyProcessing(){
+        
     }
 }
 
