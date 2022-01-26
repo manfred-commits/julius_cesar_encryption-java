@@ -106,27 +106,23 @@ public class Program {
         System.out.println(encryptionResult);
 
 
+        //DECRYPTION
+        //----------------------------
 
-        //parining and sorting
-        Character[][] pair=new Character[(int)cryptographicKeyLength][(int)cryptographicKeyLength];
-        for (int i=0;i<(int)cryptographicKeyLength;i++){
-            pair[i]=new Character[]{cryptographicKey.charAt(i),(char)i};
-        }
+        //String decryptionResult=decryption(encryptionResult,(int)cryptographicKeyLength,keyToChar);
 
-        Arrays.sort(pair, Comparator.comparing(o ->((Character) o[0])));
-
-        //decryption
         StringBuffer decryptedWord= new StringBuffer();
-        //cryptographicKeyLength
+
 
         int wordLength=encryptionResult.length();
-        float numberOfWhiteSpaces=cryptographicKeyLength - wordLength % cryptographicKeyLength,numberOfColumns=(int) Math.ceil((float)wordLength/cryptographicKeyLength);
+        float numberOfWhiteSpaces=cryptographicKeyLength - wordLength % cryptographicKeyLength;
+        float numberOfColumns=(int) Math.ceil((float)wordLength/cryptographicKeyLength);
 
         int ip=0;
         String[] subwords= new String[(int)cryptographicKeyLength];
         for (int i=0; i<wordLength;i++){
 
-            if(Integer.valueOf(pair[ip][1])>=cryptographicKeyLength-numberOfWhiteSpaces){
+            if(Integer.valueOf(Character.getNumericValue(pairSortedKeyIndex[ip][1]))>=cryptographicKeyLength-numberOfWhiteSpaces){
                 for(int j=0;j<numberOfColumns-1;j++){
                     decryptedWord.append(encryptionResult.charAt(i+j));
                 }
@@ -140,7 +136,7 @@ public class Program {
             
 
 
-            subwords[Integer.valueOf(pair[ip][1])]=decryptedWord.toString();
+            subwords[Character.getNumericValue(pairSortedKeyIndex[ip][1])]=decryptedWord.toString();
 
             decryptedWord.delete(0, decryptedWord.length());
 
@@ -211,7 +207,7 @@ public class Program {
                 //take the ordered character and the unordered index associated to it and add it to the pairSortedKeyIndex, in a
                 //multidimensional array character, index
                 if(copyOfKey[i]==key[j]){
-                    //pair[i]=new Character[]{cryptographicKey.charAt(i),(char)i};
+
                     pairSortedKeyIndex[i]= new Character[]{copyOfKey[i], (char)((char)j+'0')};
                 }
             }
@@ -222,6 +218,17 @@ public class Program {
         //}
 
         return pairSortedKeyIndex;
+    }
+    static String decryption(String encryption,int keyLength,char[] key){
+
+        Character[][] pairSortedKeyIndex=keyProcessing(keyLength,key);
+        int row=encryption.length();
+        char [] encry=encryption.toCharArray();
+//        for(Character[] character:pairSortedKeyIndex){
+//            System.out.println(character[0]+" "+character[1]);
+//        }
+
+        return "";
     }
 }
 
