@@ -35,9 +35,10 @@ public class Program {
 
         // METHOD TO PROCESS THE ARRAY KEY
         // ----------------------------------
+        Character[][] pairSortedKeyIndex=new Character[(int)cryptographicKeyLength][1];
 
-        Character[][] pairSortedKeyIndex=keyProcessing((int)cryptographicKeyLength,keyToChar);
-
+        //pairSortedKeyIndex=keyProcessing((int)cryptographicKeyLength,keyToChar,pairSortedKeyIndex);
+        keyProcessing((int)cryptographicKeyLength,keyToChar,pairSortedKeyIndex);
         for(Character[] keyIndex:pairSortedKeyIndex){
             System.out.println(keyIndex[0]+" "+(int)keyIndex[1]);
         }
@@ -82,7 +83,7 @@ public class Program {
             System.out.println();
         }
 
-
+        
         StringBuffer encryptedWord=new StringBuffer();
 
         for(int i=0; i<pairSortedKeyIndex.length;i++){
@@ -116,37 +117,47 @@ public class Program {
 
         int wordLength=encryptionResult.length();
         float numberOfWhiteSpaces=cryptographicKeyLength - wordLength % cryptographicKeyLength;
-        float numberOfColumns=(int) Math.ceil((float)wordLength/cryptographicKeyLength);
+        float numberOfRows=(int) Math.ceil((float)wordLength/cryptographicKeyLength);
 
-        int ip=0;
+        int pairIndex=0;
         String[] subwords= new String[(int)cryptographicKeyLength];
         for (int i=0; i<wordLength;i++){
 
-            if(Integer.valueOf(Character.getNumericValue(pairSortedKeyIndex[ip][1]))>=cryptographicKeyLength-numberOfWhiteSpaces){
-                for(int j=0;j<numberOfColumns-1;j++){
+            //if the index of the character of the key word is greater or even to the length of the key - the number of white spaces
+            //that in our cases would be 2 columns at the end with white spaces.
+            //the condition passes for the number of rows -1
+            if(Integer.valueOf(Character.getNumericValue(pairSortedKeyIndex[pairIndex][1]))>=cryptographicKeyLength-numberOfWhiteSpaces){
+                for(int j=0;j<numberOfRows-1;j++){
                     decryptedWord.append(encryptionResult.charAt(i+j));
                 }
-                i+=numberOfColumns-2;
+                i+=numberOfRows-2;
             }else{
-                for(int j=0;j<numberOfColumns;j++){
+                //if it's not in the condition of the last columns with white spaces
+                for(int j=0;j<numberOfRows;j++){
                     decryptedWord.append(encryptionResult.charAt(i+j));
                 }
-                i+=numberOfColumns-1;
+                i+=numberOfRows-1;
             }
             
 
+            // extrapolation and initialization of the Array String calculated to the subword Array of type String
+            //to and additional Array of the same type, that gives us the matrix with columns and rows
+            subwords[Character.getNumericValue(pairSortedKeyIndex[pairIndex][1])]=decryptedWord.toString();
 
-            subwords[Character.getNumericValue(pairSortedKeyIndex[ip][1])]=decryptedWord.toString();
-
+            //deletion of the content of the String builder
             decryptedWord.delete(0, decryptedWord.length());
 
-
-            ip++;
+            //increment of the index pair variable, used to compare the index of the sorted array
+            pairIndex++;
         }
+
+        //StringBuffer content deletion, done for re utilization at line 152
         decryptedWord.delete(0, decryptedWord.length());
-        for (int i=0; i<numberOfColumns;i++){
+
+        //decrypted word reconstruction from columns x rows format
+        for (int i=0; i<numberOfRows;i++){
             for(int j=0;j<cryptographicKeyLength;j++){
-                if(i==numberOfColumns-1 && subwords[j].length()==numberOfColumns-1){
+                if(i==numberOfRows-1 && subwords[j].length()==numberOfRows-1){
                     continue;
 
                 }
@@ -158,7 +169,7 @@ public class Program {
         System.out.println("decryption: "+decryptedResult);
 
     }
-    static Character[][] keyProcessing(int keyLength,char[] key){
+    static void keyProcessing(int keyLength,char[] key, Character[][] pairSortedKeyIndex){
 
         // Sorting of the Array variable of type char containing the key
 
@@ -198,7 +209,7 @@ public class Program {
 
         //initialization of a multidimensional Array of type Character or rows equal to the keyLength(5) and of 2 columns, to contain
         //the ordered character and its modified index from the original unordered Array of type character
-        Character[][] pairSortedKeyIndex=new Character[keyLength][1];
+        //Character[][] pairSortedKeyIndex=new Character[keyLength][1];
 
         for(int i=0;i<keyLength;i++){
             for (int j=0;j<keyLength;j++){
@@ -217,13 +228,13 @@ public class Program {
         //    System.out.println(keyIndex[0]+" "+(int)keyIndex[1]);
         //}
 
-        return pairSortedKeyIndex;
+        //return pairSortedKeyIndex;
     }
     static String decryption(String encryption,int keyLength,char[] key){
 
-        Character[][] pairSortedKeyIndex=keyProcessing(keyLength,key);
-        int row=encryption.length();
-        char [] encry=encryption.toCharArray();
+        //Character[][] pairSortedKeyIndex=keyProcessing(keyLength,key);
+        //int row=encryption.length();
+        //char [] encry=encryption.toCharArray();
 //        for(Character[] character:pairSortedKeyIndex){
 //            System.out.println(character[0]+" "+character[1]);
 //        }
